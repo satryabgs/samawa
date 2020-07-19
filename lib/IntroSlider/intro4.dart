@@ -11,10 +11,12 @@ class Intro4 extends StatefulWidget {
 class _Intro4State extends State<Intro4> {
   DbHelperUser dbHelperUser = DbHelperUser();
   User user;
-  bool check = true;
+  bool check =false;
   TextEditingController nameController = TextEditingController();
-
+  String date;
   int _selectedGender = 0;
+
+
   @override
   Widget build(BuildContext context) {
     if(user !=null){
@@ -115,12 +117,15 @@ class _Intro4State extends State<Intro4> {
             children: [
               GestureDetector(
                 onTap: () {
-                  if(check){
-                    //
+                  if(nameController.text.isEmpty){
+                    setState(() {
+                    check = true;
+                    });
                   }else{
                     user = User(0,nameController.text, _selectedGender);
                     addContact(user);
-                    savePref(false);
+                    savePrefBool(false, "first");
+                    savePrefBool(true, "firstNotif");
                     Navigator.pushReplacementNamed(context,'/welcome');
                   }
                 },
@@ -206,13 +211,24 @@ class _Intro4State extends State<Intro4> {
     await dbHelperUser.insert(object);
   }
 
-  savePref(bool value) async{
+  savePrefBool(bool value, String name) async{
 
     SharedPreferences preferences = await SharedPreferences.getInstance();
 
     setState(() {
 
-      preferences.setBool("first", value);
+      preferences.setBool(name, value);
+
+    });
+
+  }
+  savePrefString(String value, String name) async{
+
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+
+    setState(() {
+
+      preferences.setString(name, value);
 
     });
 

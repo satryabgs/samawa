@@ -57,15 +57,19 @@ class _HomeState extends State<Home> {
   AdzanNotification adzanNotification;
   User user;
 
-  bool loading = true;
+  bool loading = true, firstNotif;
+  String datePref;
 
   @override
   void initState() {
     final Future<Database> dbFuture1 = dbHelperUser.initDbUser();
     final Future<Database> dbFuture2 = dbHelperAdzan.initDbAdzan();
     final Future<Database> dbFuture3 = dbHelperIndicator.initDbIndicator();
+    getPrefBool("firstNotif");
+    //get date and parse date
+    dateNow = DateFormat('yyyy-MM-dd').format(DateTime.now());
     //get data from database
-    Future.delayed(new Duration(seconds: 2), () async {
+    Future.delayed(new Duration(seconds: 1), () async {
       dbFuture1.then((database) {
         Future<List<User>> userListFuture = dbHelperUser.getUserList();
         userListFuture.then((userList) {
@@ -91,25 +95,52 @@ class _HomeState extends State<Home> {
                 Future<List<AdzanIndicator>> indicatorListFuture =
                     dbHelperIndicator.getIndicatorList();
                 indicatorListFuture.then((indicator) {
-                  if (indicator[0].indicator == 1) {
-                    addNotif(0, subuh1);
-                  } else if (indicator[1].indicator == 1) {
-                    addNotif(1, sunrise1);
-                  } else if (indicator[2].indicator == 1) {
-                    addNotif(2, dzuhur1);
-                  } else if (indicator[3].indicator == 1) {
-                    addNotif(3, ashar1);
-                  } else if (indicator[4].indicator == 1) {
-                    addNotif(4, maghrib1);
-                  } else if (indicator[5].indicator == 1) {
-                    addNotif(5, isya1);
+                  if (firstNotif == true) {
+                    NotificationHelper().cancelNotifAll();
+                    if (indicator[0].indicator == 1) {
+                      addNotif(0, subuh1);
+                    }
+                    if (indicator[1].indicator == 1) {
+                      addNotif(1, sunrise1);
+                    }
+                    if (indicator[2].indicator == 1) {
+                      addNotif(2, dzuhur1);
+                    }
+                    if (indicator[3].indicator == 1) {
+                      addNotif(3, ashar1);
+                    }
+                    if (indicator[4].indicator == 1) {
+                      addNotif(4, maghrib1);
+                    }
+                    if (indicator[5].indicator == 1) {
+                      addNotif(5, isya1);
+                    }
+                    savePrefBool(false, "firstNotif");
+                    savePrefString("date", dateNow);
+                  }
+                  if (firstNotif == false && datePref != dateNow) {
+                    NotificationHelper().cancelNotifAll();
+                    if (indicator[0].indicator == 1) {
+                      addNotif(0, subuh1);
+                    }
+                    if (indicator[1].indicator == 1) {
+                      addNotif(1, sunrise1);
+                    }
+                    if (indicator[2].indicator == 1) {
+                      addNotif(2, dzuhur1);
+                    }
+                    if (indicator[3].indicator == 1) {
+                      addNotif(3, ashar1);
+                    }
+                    if (indicator[4].indicator == 1) {
+                      addNotif(4, maghrib1);
+                    }
+                    if (indicator[5].indicator == 1) {
+                      addNotif(5, isya1);
+                    }
+                    savePrefString("date", dateNow);
                   }
                   locationToDisplay = location;
-
-                  //get date and parse date
-                  dateNow = DateFormat('yyyy-MM-dd').format(DateTime.now());
-                  //int indexSpace = date.indexOf(" "); //get spacing after comma
-
                   dateApiNow = date;
 
                   //logic algorithmm
@@ -140,9 +171,6 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    //
-    // var now = new DateTime.now();
-    //print(now);
     dataToPass = [
       locationToDisplay,
       dateToDisplay,
@@ -693,7 +721,6 @@ class _HomeState extends State<Home> {
   void _setTime() {
     //get time
     timeNow = DateFormat('H:mm:ss').format(DateTime.now());
-    //print(timeNow);
 
     if (dateNow == dateApiNow) {
       if (_getSecond(timeNow) < _getSecond(subuh1)) {
@@ -735,16 +762,40 @@ class _HomeState extends State<Home> {
     } else {}
   }
 
-  getPref(String name) async {
+  getPrefBool(String name) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool data = prefs.getBool(name);
+    setState(() {
+      firstNotif = data;
+    });
+  }
+
+  getPrefString(String name) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String data = prefs.getString(name);
-
-    print(data);
+    setState(() {
+      datePref = data;
+    });
   }
 
   addNotif(int id, String time) {
     int h = int.parse(time.substring(0, 2));
     int m = int.parse(time.substring(3, 5));
+    debugPrint(time);
     NotificationHelper().showNotification(id, h, m);
+  }
+
+  savePrefBool(bool value, String name) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    setState(() {
+      preferences.setBool(name, value);
+    });
+  }
+
+  savePrefString(String name, String value) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    setState(() {
+      preferences.setString(name, value);
+    });
   }
 }

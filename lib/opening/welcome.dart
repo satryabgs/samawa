@@ -37,14 +37,14 @@ class _WelcomeState extends State<Welcome> {
   AdzanNotification adzanNotification;
   AdzanIndicator adzanIndicator;
   List<AdzanNotification> adzanNotificationList;
-
+Future<Database> dbFuture3;
 
   @override
   void initState() {
     super.initState();
     final Future<Database> dbFuture1 = dbHelperUser.initDbUser();
     final Future<Database> dbFuture2 = dbHelperAdzan.initDbAdzan();
-    final Future<Database> dbFuture3 = dbHelperIndicator.initDbIndicator();
+    dbFuture3 = dbHelperIndicator.initDbIndicator();
     dbFuture1.then((database) {
       Future<List<User>> userListFuture = dbHelperUser.getUserList();
       userListFuture.then((userList) {
@@ -69,28 +69,7 @@ class _WelcomeState extends State<Welcome> {
       });
     });
 
-    dbFuture3.then((value) {
-      Future<List<AdzanIndicator>> indicatorListFuture =
-          dbHelperIndicator.getIndicatorList();
-      indicatorListFuture.then((value) {
-        if (value.length == 0) {
-          adzanIndicator = AdzanIndicator(0, 1);
-          addIndicator(adzanIndicator);
-          adzanIndicator = AdzanIndicator(1, 0);
-          addIndicator(adzanIndicator);
-          adzanIndicator = AdzanIndicator(2, 1);
-          addIndicator(adzanIndicator);
-          adzanIndicator = AdzanIndicator(3, 0);
-          addIndicator(adzanIndicator);
-          adzanIndicator = AdzanIndicator(4, 1);
-          addIndicator(adzanIndicator);
-          adzanIndicator = AdzanIndicator(5, 1);
-          addIndicator(adzanIndicator);
-        } else {
-          //
-        }
-      });
-    });
+   
   }
 
   static Future<Position> getLocation() async {
@@ -170,9 +149,30 @@ class _WelcomeState extends State<Welcome> {
                           dateTomorrow,
                           city);
                       addTime(adzanNotification);
-                      Timer(const Duration(milliseconds: 2000), () {      
-                      Navigator.pushReplacementNamed(context,'/home');
-                      });
+                       dbFuture3.then((value) {
+      Future<List<AdzanIndicator>> indicatorListFuture =
+          dbHelperIndicator.getIndicatorList();
+      indicatorListFuture.then((value) {
+        if (value.length == 0) {
+          adzanIndicator = AdzanIndicator(0, 1);
+          addIndicator(adzanIndicator);
+          adzanIndicator = AdzanIndicator(1, 0);
+          addIndicator(adzanIndicator);
+          adzanIndicator = AdzanIndicator(2, 1);
+          addIndicator(adzanIndicator);
+          adzanIndicator = AdzanIndicator(3, 0);
+          addIndicator(adzanIndicator);
+          adzanIndicator = AdzanIndicator(4, 1);
+          addIndicator(adzanIndicator);
+          adzanIndicator = AdzanIndicator(5, 1);
+          addIndicator(adzanIndicator);
+          Navigator.pushReplacementNamed(context,'/home');
+        } else {
+          //
+        }
+      });
+    });
+                      
                     });
               });
             });

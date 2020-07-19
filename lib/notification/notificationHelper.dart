@@ -5,9 +5,6 @@ import 'package:rxdart/rxdart.dart';
 import '../models/reminderNotification.dart';
 
 class NotificationHelper {
-  final BehaviorSubject<ReminderNotification>
-      didReceiveLocalNotificationSubject =
-      BehaviorSubject<ReminderNotification>();
 
   final BehaviorSubject<String> selectNotificationSubject =
       BehaviorSubject<String>();
@@ -60,6 +57,27 @@ class NotificationHelper {
     var time = Time(h, m, 0);
     AndroidNotificationDetails androidNotificationDetails =
         AndroidNotificationDetails(
+        'repeatDailyAtTime channel id',
+        'repeatDailyAtTime channel name',
+        'repeatDailyAtTime description',
+      importance: Importance.Max,
+      priority: Priority.High,
+      sound: RawResourceAndroidNotificationSound('adzan'),
+      playSound: true,
+    );
+
+    IOSNotificationDetails iosNotificationDetails = IOSNotificationDetails();
+    NotificationDetails notificationDetails =
+        NotificationDetails(androidNotificationDetails, iosNotificationDetails);
+
+    // await flutterLocalNotificationsPlugin.show(
+    //     0, "Hello there!", "Plaease subscribe my channel", notificationDetails);
+    await flutterLocalNotificationsPlugin.showDailyAtTime(
+        id, 'scheduled title', 'scheduled body', time, notificationDetails);
+  }
+  Future<void> showNotif() async {
+    AndroidNotificationDetails androidNotificationDetails =
+        AndroidNotificationDetails(
       'channel_Id',
       'Channel Name',
       'Channel Description',
@@ -78,8 +96,8 @@ class NotificationHelper {
 
     // await flutterLocalNotificationsPlugin.show(
     //     0, "Hello there!", "Plaease subscribe my channel", notificationDetails);
-    await flutterLocalNotificationsPlugin.showDailyAtTime(
-        id, 'scheduled title', 'scheduled body', time, notificationDetails);
+    await flutterLocalNotificationsPlugin.show(
+        99, 'scheduled title', 'scheduled body', notificationDetails);
   }
 
   Future<void> cancelNotifAll() async {
