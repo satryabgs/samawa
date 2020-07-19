@@ -1,6 +1,8 @@
 # samawa
 
-A new Flutter project.
+Muslim Companion App
+
+![alt text](https://i.imgur.com/OgoddrT.png)
 
 ## Getting Started
 
