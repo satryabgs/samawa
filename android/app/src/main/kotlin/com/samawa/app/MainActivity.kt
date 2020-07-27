@@ -1,4 +1,4 @@
-package com.example.samawa
+package com.samawa.app
 
 import io.flutter.embedding.android.FlutterActivity
 

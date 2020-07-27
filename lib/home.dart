@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:samawa/menu/adzan.dart';
-import 'package:android_alarm_manager/android_alarm_manager.dart';
 import 'package:intl/intl.dart';
 import 'dart:async';
 import 'package:hijri/hijri_calendar.dart';

@@ -82,9 +82,13 @@ class _ChangeGenderState extends State<ChangeGender> {
                 padding: const EdgeInsets.all(8.0),
                 child: RaisedButton(
                   onPressed: () {
+                    if (_selectedGender == check) {
+                      //
+                    } else {
                     user = User(0,name, _selectedGender);
                     editContact(user);
                     Navigator.pop(context);
+                    }
                   },
                  color: _selectedGender == check? Colors.grey:Colors.green,
                   textColor: Colors.white,

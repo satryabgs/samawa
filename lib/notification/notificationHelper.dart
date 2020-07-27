@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:rxdart/rxdart.dart';
-import '../models/reminderNotification.dart';
 
 class NotificationHelper {
 
@@ -73,7 +72,7 @@ class NotificationHelper {
     // await flutterLocalNotificationsPlugin.show(
     //     0, "Hello there!", "Plaease subscribe my channel", notificationDetails);
     await flutterLocalNotificationsPlugin.showDailyAtTime(
-        id, 'scheduled title', 'scheduled body', time, notificationDetails);
+        id, 'Adzan', 'Adzan ditempatmu sudah berkumandang. Sholat jangan ditunda-tunda ya!', time, notificationDetails);
   }
   Future<void> showNotif() async {
     AndroidNotificationDetails androidNotificationDetails =
